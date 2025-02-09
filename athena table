@@ -1,0 +1,41 @@
+CREATE EXTERNAL TABLE IF NOT EXISTS alb_logs (
+  type STRING,
+  time STRING,
+  elb STRING,
+  client_ip STRING,
+  client_port INT,
+  target_ip STRING,
+  target_port INT,
+  request_processing_time DOUBLE,
+  target_processing_time DOUBLE,
+  response_processing_time DOUBLE,
+  elb_status_code INT,
+  target_status_code STRING,
+  received_bytes BIGINT,
+  sent_bytes BIGINT,
+  request_verb STRING,
+  request_url STRING,
+  request_proto STRING,
+  user_agent STRING,
+  ssl_cipher STRING,
+  ssl_protocol STRING,
+  target_group_arn STRING,
+  trace_id STRING,
+  domain_name STRING,
+  chosen_cert_arn STRING,
+  matched_rule_priority STRING,
+  request_creation_time STRING,
+  actions_executed STRING,
+  redirect_url STRING,
+  lambda_error_reason STRING,
+  target_port_list STRING,
+  target_status_code_list STRING,
+  classification STRING,
+  classification_reason STRING
+)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.RegexSerDe'
+WITH SERDEPROPERTIES (
+  'serialization.format' = '1',
+  'input.regex' = '([^ ]*) ([^ ]*) ([^ ]*) ([^ ]*):([0-9]*) ([^ ]*)[:-]([0-9]*) ([-.0-9]*) ([-.0-9]*) ([-.0-9]*) (|[-0-9]*) (-|[-0-9]*) ([-0-9]*) ([-0-9]*) "([^ ]*) (.*) (-|[^ ]]*)" "([^"]*)" ([A-Z0-9-_]+) ([A-Za-z0-9.-]*) ([^ ]*) "([^"]*)" "([^"]*)" "([^"]*)" ([-.0-9]*) ([^ ]*) "([^"]*)" "([^"]*)" "([^"]*)" "([^\s]+?)" "([^\s]+)" "([^ ]*)" "([^"]*)"'
+)
+LOCATION 's3://bucket-111222333/prefix/AWSLogs/533267265588/elasticloadbalancing/ap-south-1/';
